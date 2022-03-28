@@ -15,7 +15,6 @@
   "editor.codeActionsOnSave": {
     "source.fixAll": true
   },
-  "prettier.disableLanguages": ["javascript", "javascriptreact"],
   "workbench.colorCustomizations": {
     "activityBar.activeBackground": "#4f668d",
     "activityBar.activeBorder": "#c699aa",
