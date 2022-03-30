@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const useForm = (initial = {}) => {
   // create a state object for inputs
   const [inputs, setInputs] = useState(initial);
-
+  const initialValue = Object.values(initial).join('');
   function handleChange(e) {
     let { value, name, type } = e.target;
     if (type === 'number') {
@@ -26,6 +26,11 @@ const useForm = (initial = {}) => {
     );
     setInputs(blankState);
   };
+
+  useEffect(() => {
+    setInputs(initial);
+  }, [initialValue]);
+
   return { inputs, handleChange, resetForm, clearForm };
 };
 export default useForm;

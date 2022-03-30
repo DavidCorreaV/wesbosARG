@@ -28,7 +28,6 @@ const ProductsListStyles = styled.section`
 
 const Products = () => {
   const { data, error, loading } = useQuery(ALL_PRODUCTS_QUERY);
-  console.log(data);
   if (loading) {
     return <h3>Loading...</h3>;
   }
