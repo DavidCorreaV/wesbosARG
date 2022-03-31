@@ -13,7 +13,7 @@ const Product = ({ product }) => (
       alt={product?.photo?.altText || product.name}
     />
     <Title>
-      <Link href={`/products/${product.id}`}>{product.name}</Link>
+      <Link href={`/product/${product.id}`}>{product.name}</Link>
     </Title>
     <PriceTag>{formatMoney(product.price / 100)}</PriceTag>
     <p>{product.description}</p>
