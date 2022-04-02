@@ -41,8 +41,7 @@ const SignIn = () => {
       method="post"
       onSubmit={async (e) => {
         e.preventDefault();
-        const res = await signin();
-        console.log(res);
+        await signin();
         resetForm();
       }}
     >
@@ -64,7 +63,7 @@ const SignIn = () => {
           />
         </label>
 
-        <label htmlFor="description">
+        <label htmlFor="password">
           Password
           <input
             type="password"

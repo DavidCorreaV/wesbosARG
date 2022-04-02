@@ -55,7 +55,7 @@ button {
 `;
 
 const InnerStyles = styled.div`
-  max-width: maxWidth;
+  max-width: var(--maxWidth);
   margin: 0 auto;
   padding: 2rem;
 `;
