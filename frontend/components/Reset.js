@@ -4,58 +4,60 @@ import useForm from '../lib/useForm';
 import Form from './styles/Form';
 import DisplayError from './ErrorMessage';
 
-const SIGNUP_MUTATION = gql`
-  mutation SIGNUP_MUTATION(
+const RESET_MUTATION = gql`
+  mutation RESET_MUTATION(
     $email: String!
-    $name: String!
     $password: String!
+    $token: String!
   ) {
-    createUser(data: { email: $email, name: $name, password: $password }) {
-      id
-      name
-      email
+    redeemUserPasswordResetToken(
+      email: $email
+      password: $password
+      token: $token
+    ) {
+      code
+      message
     }
   }
 `;
 
-const SignUp = () => {
+// eslint-disable-next-line react/prop-types
+const Reset = ({ token }) => {
   const { inputs, handleChange, resetForm } = useForm({
     email: 'Email',
-    name: 'Name',
     password: '',
+    token: '',
   });
 
-  const [signup, { data, error, loading }] = useMutation(SIGNUP_MUTATION, {
+  const [reset, { data, error, loading }] = useMutation(RESET_MUTATION, {
     variables: {
       email: inputs.email,
       password: inputs.password,
-      name: inputs.name,
+      token,
     },
     // refetchQueries: [{ query: CURRENT_USER_QUERY }],
   });
-
-  // const [errorMessage, setErrorMessage] = useState({});
-  if (data?.createUser) {
-    return <p>Signed up with {data?.createUser.email}. Please Sign In.</p>;
-  }
 
   return (
     <Form
       method="post"
       onSubmit={async (e) => {
         e.preventDefault();
-        const res = await signup().catch((err) => {
+        const res = await reset().catch((err) => {
           // setErrorMessage(err);
           console.log(err);
         });
         resetForm();
       }}
     >
-      <h2>Sign up for an account</h2>
+      <h2>Reset your password</h2>
 
-      <DisplayError error={data?.errors || error} />
+      <DisplayError error={data?.redeemUserPasswordResetToken || error} />
 
       <fieldset disabled={loading} aria-busy={loading}>
+        {data?.redeemUserPasswordResetToken === null && (
+          <p>Succesfully reset your password</p>
+        )}
         <label htmlFor="email">
           Email
           <input
@@ -68,19 +70,6 @@ const SignUp = () => {
             onChange={handleChange}
           />
         </label>
-        <label htmlFor="name">
-          Name
-          <input
-            type="text"
-            id="signName"
-            name="name"
-            placeholder="Your Name"
-            autoComplete="name"
-            value={inputs.name}
-            onChange={handleChange}
-          />
-        </label>
-
         <label htmlFor="password">
           Password
           <input
@@ -92,9 +81,10 @@ const SignUp = () => {
             onChange={handleChange}
           />
         </label>
-        <button type="submit">Sign Up!</button>
+
+        <button type="submit">Request Reset</button>
       </fieldset>
     </Form>
   );
 };
-export default SignUp;
+export default Reset;

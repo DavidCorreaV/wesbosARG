@@ -19,7 +19,7 @@ const paginationField = () => ({
     }
 
     if (items.length) {
-      console.log('Found items. Sending to apollo...');
+      // console.log('Found items. Sending to apollo...');
       return items;
     }
 
@@ -34,7 +34,7 @@ const paginationField = () => ({
     for (let i = skip; i < skip + incoming.length; ++i) {
       merged[i] = incoming[i - skip];
     }
-    console.log(merged);
+    // console.log(merged);
     return merged;
   },
 });
