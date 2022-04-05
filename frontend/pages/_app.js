@@ -8,6 +8,8 @@ import Page from '../components/Page';
 
 import withData from '../lib/withData';
 
+import { CartStateProvider } from '../lib/cartState';
+
 Router.events.on('routeChangeStart', () => {
   NProgress.start();
 });
@@ -20,10 +22,12 @@ Router.events.on('routeChangeError', () => {
 // eslint-disable-next-line react/prop-types
 const App = ({ Component, pageProps, apollo }) => (
   <ApolloProvider client={apollo}>
-    <Page>
-      {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-      <Component {...pageProps} />
-    </Page>
+    <CartStateProvider>
+      <Page>
+        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+        <Component {...pageProps} />
+      </Page>
+    </CartStateProvider>
   </ApolloProvider>
 );
 

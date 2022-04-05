@@ -1,0 +1,34 @@
+{
+	"folders": [
+		{
+			"path": "frontend"
+		},
+		{
+			"path": "backend"
+		}
+	],
+	"settings": {
+		"emmet.triggerExpansionOnTab": true,
+		"eslint.alwaysShowStatus": true,
+		"workbench.colorCustomizations": {
+			"activityBar.activeBackground": "#4f668d",
+			"activityBar.activeBorder": "#c699aa",
+			"activityBar.background": "#4f668d",
+			"activityBar.foreground": "#e7e7e7",
+			"activityBar.inactiveForeground": "#e7e7e799",
+			"activityBarBadge.background": "#c699aa",
+			"activityBarBadge.foreground": "#15202b",
+			"sash.hoverBorder": "#4f668d",
+			"statusBar.background": "#3d4e6c",
+			"statusBar.foreground": "#e7e7e7",
+			"statusBarItem.hoverBackground": "#4f668d",
+			"statusBarItem.remoteBackground": "#3d4e6c",
+			"statusBarItem.remoteForeground": "#e7e7e7",
+			"titleBar.activeBackground": "#3d4e6c",
+			"titleBar.activeForeground": "#e7e7e7",
+			"titleBar.inactiveBackground": "#3d4e6c99",
+			"titleBar.inactiveForeground": "#e7e7e799"
+		},
+		"peacock.color": "#3d4e6c"
+	}
+}
