@@ -3,6 +3,8 @@ import SignOut from './SignOut';
 import NavStyles from './styles/NavStyles';
 import { useUser } from './User';
 import { useCart } from '../lib/cartState';
+import CartCount from './CartCount';
+// import formatMoney from '../lib/formatMoney';
 
 const Nav = () => {
   const { openCart } = useCart();
@@ -18,6 +20,20 @@ const Nav = () => {
           <SignOut />
           <button type="button" onClick={openCart}>
             My Cart
+            <CartCount
+              /* 
+              Change this to get total price instead
+              count={formatMoney(
+                user.cart.reduce(
+                  (count, item) => count + item.product.price * item.quantity,
+                  0
+                ) / 100
+              )} */
+              count={user.cart.reduce(
+                (count, item) => count + item.quantity,
+                0
+              )}
+            />
           </button>
         </>
       )}

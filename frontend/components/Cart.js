@@ -8,18 +8,26 @@ import CloseButton from './styles/CloseButton';
 import formatMoney from '../lib/formatMoney';
 import calcTotalCart from '../lib/calcTotalCart';
 import { useCart } from '../lib/cartState';
+import RemoveFromCart from './RemoveFromCart';
 
 const CartItemStyles = styled.li`
   padding: 1rem 0;
   border-bottom: 1px solid var(--lightGrey);
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-columns: auto 1fr auto;
   img {
     margin-right: 1rem;
   }
   h3,
   p {
     margin: 0;
+  }
+  button {
+    font-size: 3rem;
+    background: transparent;
+    border: none;
+    align-self: center;
+    justify-self: center;
   }
 `;
 
@@ -43,6 +51,7 @@ const CartItem = ({ item }) => {
           </em>
         </p>
       </div>
+      <RemoveFromCart id={item.id} />
     </CartItemStyles>
   );
 };
