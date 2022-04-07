@@ -11,6 +11,7 @@ const REMOVE_FROM_CART_MUTATION = gql`
 const update = (cache, payload) => {
   cache.evict(cache.identify(payload.data.deleteCartItem));
 };
+// eslint-disable-next-line react/prop-types
 const RemoveFromCart = ({ id }) => {
   const [removeFromCart, { loading }] = useMutation(REMOVE_FROM_CART_MUTATION, {
     variables: { id },
