@@ -1,9 +1,8 @@
-/* eslint-disable react/jsx-props-no-spreading */
-
 import { useLazyQuery } from '@apollo/client';
 import { resetIdCounter, useCombobox } from 'downshift';
 import gql from 'graphql-tag';
 import debounce from 'lodash.debounce';
+import { useRouter } from 'next/dist/client/router';
 import { DropDown, DropDownItem, SearchStyles } from './styles/DropDown';
 
 const SEARCH_PRODUCTS_QUERY = gql`
@@ -27,7 +26,8 @@ const SEARCH_PRODUCTS_QUERY = gql`
   }
 `;
 
-const Search = () => {
+export default function Search() {
+  const router = useRouter();
   const [findItems, { loading, data, error }] = useLazyQuery(
     SEARCH_PRODUCTS_QUERY,
     {
@@ -35,39 +35,64 @@ const Search = () => {
     }
   );
   const items = data?.searchTerms || [];
-  const findItemsButChill = debounce(findItems, 300);
+  const findItemsButChill = debounce(findItems, 350);
   resetIdCounter();
-  const { inputValue, getMenuProps, getInputProps, getComboboxProps } =
-    useCombobox({
-      items: [],
-      onInputValueChange() {
-        console.log(data);
-        findItemsButChill({ variables: { searchTerm: inputValue } });
-      },
-      onSelectedItemChange() {
-        console.log('oh my');
-      },
-    });
-
+  const {
+    isOpen,
+    inputValue,
+    getMenuProps,
+    getInputProps,
+    getComboboxProps,
+    getItemProps,
+    highlightedIndex,
+  } = useCombobox({
+    items,
+    onInputValueChange() {
+      findItemsButChill({
+        variables: {
+          searchTerm: inputValue,
+        },
+      });
+    },
+    onSelectedItemChange({ selectedItem }) {
+      router.push({
+        pathname: `/product/${selectedItem.id}`,
+      });
+    },
+    itemToString: (item) => item?.name || '',
+  });
   return (
     <SearchStyles>
-      {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <div {...getComboboxProps()}>
         <input
           {...getInputProps({
             type: 'search',
-            placeholder: 'Search',
+            placeholder: 'Search for an Item',
             id: 'search',
-            className: 'loading',
+            className: loading ? 'loading' : '',
           })}
         />
       </div>
       <DropDown {...getMenuProps()}>
-        {items.map((item) => (
-          <DropDownItem key={item.id}>{item.name}</DropDownItem>
-        ))}
+        {isOpen &&
+          items.map((item, index) => (
+            <DropDownItem
+              {...getItemProps({ item, index })}
+              key={item.id}
+              highlighted={index === highlightedIndex}
+            >
+              <img
+                src={item.photo.image.publicUrlTransformed}
+                alt={item.name}
+                width="50"
+              />
+              {item.name}
+            </DropDownItem>
+          ))}
+        {isOpen && !items.length && !loading && (
+          <DropDownItem>Sorry, No items found for {inputValue}</DropDownItem>
+        )}
       </DropDown>
     </SearchStyles>
   );
-};
-export default Search;
+}

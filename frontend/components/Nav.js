@@ -37,6 +37,11 @@ const Nav = () => {
           </button>
         </>
       )}
+	   {!user && (
+        <>
+          <Link href="/signin">Sign In</Link>
+        </>
+      )}
     </NavStyles>
   );
 };
