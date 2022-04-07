@@ -1,8 +1,8 @@
-import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
-import useForm from '../lib/useForm';
+import { useMutation } from '@apollo/client';
 import Form from './styles/Form';
-import DisplayError from './ErrorMessage';
+import useForm from '../lib/useForm';
+import Error from './ErrorMessage';
 
 const REQUEST_RESET_MUTATION = gql`
   mutation REQUEST_RESET_MUTATION($email: String!) {
@@ -13,57 +13,49 @@ const REQUEST_RESET_MUTATION = gql`
   }
 `;
 
-const RequestReset = () => {
+export default function RequestReset() {
   const { inputs, handleChange, resetForm } = useForm({
-    email: 'Email',
+    email: '',
   });
-
-  const [signup, { data, error, loading }] = useMutation(
+  const [signup, { data, loading, error }] = useMutation(
     REQUEST_RESET_MUTATION,
     {
-      variables: {
-        email: inputs.email,
-      },
+      variables: inputs,
+      // refectch the currently logged in user
       // refetchQueries: [{ query: CURRENT_USER_QUERY }],
     }
   );
-
+  async function handleSubmit(e) {
+    e.preventDefault(); // stop the form from submitting
+    console.log(inputs);
+    const res = await signup().catch(console.error);
+    console.log(res);
+    console.log({ data, loading, error });
+    resetForm();
+    // Send the email and password to the graphqlAPI
+  }
   return (
-    <Form
-      method="post"
-      onSubmit={async (e) => {
-        e.preventDefault();
-        const res = await signup().catch((err) => {
-          // setErrorMessage(err);
-          console.log(err);
-        });
-        resetForm();
-      }}
-    >
-      <h2>Forgot your password?</h2>
-
-      <DisplayError error={data?.errors || error} />
-
-      <fieldset disabled={loading} aria-busy={loading}>
+    <Form method="POST" onSubmit={handleSubmit}>
+      <h2>Request a Password Reset</h2>
+      <Error error={error} />
+      <fieldset>
         {data?.sendUserPasswordResetLink === null && (
-          <p>Reset link successfully sent. Please check your inbox.</p>
+          <p>Success! Check your email for a link!</p>
         )}
+
         <label htmlFor="email">
           Email
           <input
             type="email"
-            id="signEmail"
             name="email"
-            placeholder="your email"
+            placeholder="Your Email Address"
             autoComplete="email"
             value={inputs.email}
             onChange={handleChange}
           />
         </label>
-
-        <button type="submit">Request Reset</button>
+        <button type="submit">Request Reset!</button>
       </fieldset>
     </Form>
   );
-};
-export default RequestReset;
+}

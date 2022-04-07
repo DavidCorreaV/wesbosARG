@@ -1,8 +1,7 @@
-import { useQuery } from '@apollo/client';
-import gql from 'graphql-tag';
+import { gql, useQuery } from '@apollo/client';
 
-export const CURRENT_USER_QUERY = gql`
-  query CURRENT_USER_QUERY {
+const CURRENT_USER_QUERY = gql`
+  query {
     authenticatedItem {
       ... on User {
         id
@@ -12,10 +11,10 @@ export const CURRENT_USER_QUERY = gql`
           id
           quantity
           product {
-            name
-            description
             id
             price
+            name
+            description
             photo {
               image {
                 publicUrlTransformed
@@ -28,7 +27,9 @@ export const CURRENT_USER_QUERY = gql`
   }
 `;
 
-export const useUser = () => {
+export function useUser() {
   const { data } = useQuery(CURRENT_USER_QUERY);
   return data?.authenticatedItem;
-};
+}
+
+export { CURRENT_USER_QUERY };

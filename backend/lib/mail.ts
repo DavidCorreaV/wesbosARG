@@ -9,28 +9,26 @@ const transport = createTransport({
   },
 });
 
-function makeANiceEmail(text: string): string {
+function makeANiceEmail(text: string) {
   return `
-    <div style="
-    border: 1px solid black;
-    padding: 20px;
-    font-family: sans-serif;
-    line-height: 2;
-    font-size: 20px;
+    <div className="email" style="
+      border: 1px solid black;
+      padding: 20px;
+      font-family: sans-serif;
+      line-height: 2;
+      font-size: 20px;
     ">
-    <h2>Hello there</h2>
-    <p>${text}</p>
-    <p>Sick-Fits Team</p>
+      <h2>Hello There!</h2>
+      <p>${text}</p>
+
+      <p>😘, Wes Bos</p>
     </div>
-    `;
+  `;
 }
-export interface Envelope {
-  from: string;
-  to?: string[] | null;
-}
+
 export interface MailResponse {
-  accepted?: string[] | null;
-  rejected?: null[] | null;
+  accepted?: (string)[] | null;
+  rejected?: (null)[] | null;
   envelopeTime: number;
   messageTime: number;
   messageSize: number;
@@ -38,6 +36,11 @@ export interface MailResponse {
   envelope: Envelope;
   messageId: string;
 }
+export interface Envelope {
+  from: string;
+  to?: (string)[] | null;
+}
+
 
 export async function sendPasswordResetEmail(
   resetToken: string,
@@ -46,13 +49,14 @@ export async function sendPasswordResetEmail(
   // email the user a token
   const info = (await transport.sendMail({
     to,
-    from: 'test@example.com',
+    from: 'wes@wesbos.com',
     subject: 'Your password reset token!',
     html: makeANiceEmail(`Your Password Reset Token is here!
-        <a href="${process.env.FRONTEND_URL}/reset?token=${resetToken}">Click Here to reset</a>
-      `),
+      <a href="${process.env.FRONTEND_URL}/reset?token=${resetToken}">Click Here to reset</a>
+    `),
   })) as MailResponse;
-  if (process.env.MAIL_USER.includes('ethereal.email')) {
+  if(process.env.MAIL_USER.includes('ethereal.email')) {
     console.log(`💌 Message Sent!  Preview it at ${getTestMessageUrl(info)}`);
+
   }
 }

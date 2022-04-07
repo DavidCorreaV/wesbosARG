@@ -9,7 +9,7 @@ const ProductStyles = styled.div`
   grid-auto-columns: 1fr;
   grid-auto-flow: column;
   max-width: var(--maxWidth);
-  justify-content: stretch;
+  justify-content: center;
   align-items: top;
   gap: 2rem;
   img {
@@ -21,44 +21,44 @@ const ProductStyles = styled.div`
 const SINGLE_ITEM_QUERY = gql`
   query SINGLE_ITEM_QUERY($id: ID!) {
     Product(where: { id: $id }) {
-      id
       name
+      price
       description
+      id
       photo {
+        id
+        altText
         image {
           publicUrlTransformed
         }
-        altText
       }
-      status
-      price
     }
   }
 `;
-// eslint-disable-next-line react/prop-types
-const SingleProduct = ({ id }) => {
+
+export default function SingleProduct({ id }) {
   const { data, loading, error } = useQuery(SINGLE_ITEM_QUERY, {
-    variables: { id },
+    variables: {
+      id,
+    },
   });
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-  if (error) {
-    return <DisplayError error={error} />;
-  }
-  const { name, description, photo, id: ProductId } = data.Product;
+  if (loading) return <p>Loading...</p>;
+  if (error) return <DisplayError error={error} />;
+  const { Product } = data;
+  console.log(Product);
   return (
     <ProductStyles>
       <Head>
-        <title>Sick Fits | {name}</title>
+        <title>Sick Fits | {Product.name}</title>
       </Head>
-      <img src={photo.image.publicUrlTransformed} alt={photo.altText || name} />
+      <img
+        src={Product.photo.image.publicUrlTransformed}
+        alt={Product.photo.altText}
+      />
       <div className="details">
-        <h2>{name}</h2>
-        <p>{description}</p>
-      </div>{' '}
+        <h2>{Product.name}</h2>
+        <p>{Product.description}</p>
+      </div>
     </ProductStyles>
   );
-};
-
-export default SingleProduct;
+}

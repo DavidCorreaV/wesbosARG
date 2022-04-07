@@ -1,5 +1,16 @@
 import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
+import styled from 'styled-components';
+
+const BigButton = styled.button`
+  font-size: 3rem;
+  background: none;
+  border: 0;
+  &:hover {
+    color: var(--red);
+    cursor: pointer;
+  }
+`;
 
 const REMOVE_FROM_CART_MUTATION = gql`
   mutation REMOVE_FROM_CART_MUTATION($id: ID!) {
@@ -8,31 +19,30 @@ const REMOVE_FROM_CART_MUTATION = gql`
     }
   }
 `;
-const update = (cache, payload) => {
+
+function update(cache, payload) {
   cache.evict(cache.identify(payload.data.deleteCartItem));
-};
-// eslint-disable-next-line react/prop-types
-const RemoveFromCart = ({ id }) => {
+}
+
+export default function RemoveFromCart({ id }) {
   const [removeFromCart, { loading }] = useMutation(REMOVE_FROM_CART_MUTATION, {
     variables: { id },
     update,
-    /* 
-   Optimistic Response is not working as expected for unknown reasons.
-   Pending corrections from wes
-   
-   optimisticResponse: {
-      deleteCartItem: { __typename: 'CartItem', id },
-    }, */
+    // optimisticResponse: {
+    //   deleteCartItem: {
+    //     __typename: 'CartItem',
+    //     id,
+    //   },
+    // },
   });
   return (
-    <button
+    <BigButton
+      onClick={removeFromCart}
       disabled={loading}
       type="button"
-      onClick={removeFromCart}
-      title="Remove From Cart"
+      title="Remove This Item from Cart"
     >
       &times;
-    </button>
+    </BigButton>
   );
-};
-export default RemoveFromCart;
+}

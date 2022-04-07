@@ -14,36 +14,29 @@ export const PAGINATION_QUERY = gql`
   }
 `;
 
-const productsPerPage = perPage;
-
-// eslint-disable-next-line react/prop-types
-const Pagination = ({ page }) => {
+export default function Pagination({ page }) {
   const { error, loading, data } = useQuery(PAGINATION_QUERY);
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-  if (error) {
-    return <DisplayError error={error} />;
-  }
-  const totalPages = Math.ceil(data._allProductsMeta.count / productsPerPage);
+  if (loading) return 'Loading...';
+  if (error) return <DisplayError error={error} />;
+  const { count } = data._allProductsMeta;
+  const pageCount = Math.ceil(count / perPage);
   return (
     <PaginationStyles>
       <Head>
         <title>
-          Sick Fits - Page {page} of {totalPages}
+          Sick Fits - Page {page} of {pageCount}
         </title>
       </Head>
       <Link href={`/products/${page - 1}`}>
-        <a aria-disabled={loading || page === 1}>🡨 Prev</a>
+        <a aria-disabled={page <= 1}>← Prev</a>
       </Link>
       <p>
-        Page {page} of {totalPages}
+        Page {page} of {pageCount}
       </p>
-      <p> {data._allProductsMeta.count} Items Total</p>
+      <p>{count} Items Total</p>
       <Link href={`/products/${page + 1}`}>
-        <a aria-disabled={loading || page === totalPages}>Next 🡪</a>
+        <a aria-disabled={page >= pageCount}>Next →</a>
       </Link>
     </PaginationStyles>
   );
-};
-export default Pagination;
+}

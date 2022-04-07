@@ -6,14 +6,15 @@ import SignUp from '../components/SignUp';
 const GridStyles = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+  grid-gap: 2rem;
 `;
 
-const SignInPage = () => (
-  <GridStyles>
-    <SignIn />
-    <SignUp />
-    <RequestReset />
-  </GridStyles>
-);
-export default SignInPage;
+export default function SignInPage() {
+  return (
+    <GridStyles>
+      <SignIn />
+      <SignUp />
+      <RequestReset />
+    </GridStyles>
+  );
+}

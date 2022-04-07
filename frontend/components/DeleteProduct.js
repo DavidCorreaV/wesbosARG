@@ -1,6 +1,5 @@
 import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
-import { useState } from 'react';
 
 const DELETE_PRODUCT_MUTATION = gql`
   mutation DELETE_PRODUCT_MUTATION($id: ID!) {
@@ -11,42 +10,33 @@ const DELETE_PRODUCT_MUTATION = gql`
   }
 `;
 
-const update = (cache, payload) => {
+function update(cache, payload) {
+  console.log(payload);
+  console.log('running the update function after delete');
   cache.evict(cache.identify(payload.data.deleteProduct));
-};
+}
 
-const DeleteProduct = ({ id, children }) => {
-  const [count, setCount] = useState(1);
-  const [output, setOutput] = useState(children);
-
-  const [deleteProduct, { loading }] = useMutation(DELETE_PRODUCT_MUTATION, {
-    variables: { id },
-    update,
-  });
-  const handleClick = () => {
-    setCount(count + 1);
-    if (count === 1) {
-      setOutput('Click again to confirm');
+export default function DeleteProduct({ id, children }) {
+  const [deleteProduct, { loading, error }] = useMutation(
+    DELETE_PRODUCT_MUTATION,
+    {
+      variables: { id },
+      update,
     }
-    if (count === 2) {
-      setOutput('Click again if you are super sure');
-    }
-    if (count === 3) {
-      setOutput('Last chance. Click to proceed.');
-    }
-    if (count === 4) {
-      setOutput('Deleting...');
-      deleteProduct().catch((e) => alert(e.message));
-      setCount(1);
-    }
-  };
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+  );
   return (
-    <button type="button" disabled={loading} onClick={handleClick}>
-      {output}
+    <button
+      type="button"
+      disabled={loading}
+      onClick={() => {
+        if (confirm('Are you sure you want to delete this item?')) {
+          // go ahead and delete it
+          console.log('DELTEe');
+          deleteProduct().catch((err) => alert(err.message));
+        }
+      }}
+    >
+      {children}
     </button>
   );
-};
-export default DeleteProduct;
+}

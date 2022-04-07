@@ -1,8 +1,8 @@
-import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
-import useForm from '../lib/useForm';
+import { useMutation } from '@apollo/client';
 import Form from './styles/Form';
-import DisplayError from './ErrorMessage';
+import useForm from '../lib/useForm';
+import Error from './ErrorMessage';
 
 const SIGNUP_MUTATION = gql`
   mutation SIGNUP_MUTATION(
@@ -12,67 +12,46 @@ const SIGNUP_MUTATION = gql`
   ) {
     createUser(data: { email: $email, name: $name, password: $password }) {
       id
-      name
       email
+      name
     }
   }
 `;
 
-const SignUp = () => {
+export default function SignUp() {
   const { inputs, handleChange, resetForm } = useForm({
-    email: 'Email',
-    name: 'Name',
+    email: '',
+    name: '',
     password: '',
   });
-
-  const [signup, { data, error, loading }] = useMutation(SIGNUP_MUTATION, {
-    variables: {
-      email: inputs.email,
-      password: inputs.password,
-      name: inputs.name,
-    },
+  const [signup, { data, loading, error }] = useMutation(SIGNUP_MUTATION, {
+    variables: inputs,
+    // refectch the currently logged in user
     // refetchQueries: [{ query: CURRENT_USER_QUERY }],
   });
-
-  // const [errorMessage, setErrorMessage] = useState({});
-  if (data?.createUser) {
-    return <p>Signed up with {data?.createUser.email}. Please Sign In.</p>;
+  async function handleSubmit(e) {
+    e.preventDefault(); // stop the form from submitting
+    console.log(inputs);
+    const res = await signup().catch(console.error);
+    console.log(res);
+    console.log({ data, loading, error });
+    resetForm();
+    // Send the email and password to the graphqlAPI
   }
-
   return (
-    <Form
-      method="post"
-      onSubmit={async (e) => {
-        e.preventDefault();
-        const res = await signup().catch((err) => {
-          // setErrorMessage(err);
-          console.log(err);
-        });
-        resetForm();
-      }}
-    >
-      <h2>Sign up for an account</h2>
-
-      <DisplayError error={data?.errors || error} />
-
-      <fieldset disabled={loading} aria-busy={loading}>
+    <Form method="POST" onSubmit={handleSubmit}>
+      <h2>Sign Up For an Account</h2>
+      <Error error={error} />
+      <fieldset>
+        {data?.createUser && (
+          <p>
+            Signed up with {data.createUser.email} - Please Go Head and Sign in!
+          </p>
+        )}
         <label htmlFor="email">
-          Email
-          <input
-            type="email"
-            id="signEmail"
-            name="email"
-            placeholder="your email"
-            autoComplete="email"
-            value={inputs.email}
-            onChange={handleChange}
-          />
-        </label>
-        <label htmlFor="name">
-          Name
+          Your Name
           <input
             type="text"
-            id="signName"
             name="name"
             placeholder="Your Name"
             autoComplete="name"
@@ -80,21 +59,30 @@ const SignUp = () => {
             onChange={handleChange}
           />
         </label>
-
+        <label htmlFor="email">
+          Email
+          <input
+            type="email"
+            name="email"
+            placeholder="Your Email Address"
+            autoComplete="email"
+            value={inputs.email}
+            onChange={handleChange}
+          />
+        </label>
         <label htmlFor="password">
           Password
           <input
             type="password"
-            id="signPassword"
             name="password"
             placeholder="Password"
+            autoComplete="password"
             value={inputs.password}
             onChange={handleChange}
           />
         </label>
-        <button type="submit">Sign Up!</button>
+        <button type="submit">Sign In!</button>
       </fieldset>
     </Form>
   );
-};
-export default SignUp;
+}

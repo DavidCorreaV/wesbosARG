@@ -34,26 +34,31 @@ const UPDATE_PRODUCT_MUTATION = gql`
   }
 `;
 
-// eslint-disable-next-line react/prop-types
-const UpdateProduct = ({ id }) => {
+export default function UpdateProduct({ id }) {
+  // 1. We need to get the existing product
   const { data, error, loading } = useQuery(SINGLE_PRODUCT_QUERY, {
     variables: { id },
   });
-
+  // 2. We need to get the mutation to update the product
   const [
     updateProduct,
     { data: updateData, error: updateError, loading: updateLoading },
   ] = useMutation(UPDATE_PRODUCT_MUTATION);
-
-  const { inputs, handleChange, clearForm, resetForm } = useForm(data?.Product);
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+  // 2.5 Create some state for the form inputs:
+  const { inputs, handleChange, clearForm, resetForm } = useForm(
+    data?.Product || {
+      name: '',
+      description: '',
+      price: '',
+    }
+  );
+  console.log(inputs);
+  if (loading) return <p>loading...</p>;
+  // 3. We need the form to handle the updates
   return (
     <Form
       onSubmit={async (e) => {
         e.preventDefault();
-
         const res = await updateProduct({
           variables: {
             id,
@@ -61,12 +66,16 @@ const UpdateProduct = ({ id }) => {
             description: inputs.description,
             price: inputs.price,
           },
-        });
+        }).catch(console.error);
         console.log(res);
-        /*   const res = await createProduct();
-
-        clearForm();
-        Router.push({ pathname: `/product/${res.data.createProduct.id}` }); */
+        // Submit the inputfields to the backend:
+        // TODO: Handle Submit!!!
+        // const res = await createProduct();
+        // clearForm();
+        // // Go to that product's page!
+        // Router.push({
+        //   pathname: `/product/${res.data.createProduct.id}`,
+        // });
       }}
     >
       <DisplayError error={error || updateError} />
@@ -88,7 +97,7 @@ const UpdateProduct = ({ id }) => {
             type="number"
             id="price"
             name="price"
-            placeholder="Price"
+            placeholder="price"
             value={inputs.price}
             onChange={handleChange}
           />
@@ -96,7 +105,6 @@ const UpdateProduct = ({ id }) => {
         <label htmlFor="description">
           Description
           <textarea
-            type="text"
             id="description"
             name="description"
             placeholder="Description"
@@ -104,9 +112,9 @@ const UpdateProduct = ({ id }) => {
             onChange={handleChange}
           />
         </label>
+
         <button type="submit">Update Product</button>
       </fieldset>
     </Form>
   );
-};
-export default UpdateProduct;
+}

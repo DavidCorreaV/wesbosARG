@@ -1,6 +1,6 @@
-const AccountPage = () => (
-  <div>
-    <p>account</p>
+export default function OrderPage() {
+  return <div>
+    <p>Hello!</p>
   </div>
-);
-export default AccountPage;
+}
+

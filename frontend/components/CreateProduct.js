@@ -2,14 +2,13 @@ import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import Router from 'next/router';
 import useForm from '../lib/useForm';
-
-import Form from './styles/Form';
 import DisplayError from './ErrorMessage';
 import { ALL_PRODUCTS_QUERY } from './Products';
+import Form from './styles/Form';
 
 const CREATE_PRODUCT_MUTATION = gql`
   mutation CREATE_PRODUCT_MUTATION(
-    #Variables to pass
+    # Which variables are getting passed in? And What types are they
     $name: String!
     $description: String!
     $price: Int!
@@ -20,38 +19,43 @@ const CREATE_PRODUCT_MUTATION = gql`
         name: $name
         description: $description
         price: $price
-        status: "AVALIABLE"
+        status: "AVAILABLE"
         photo: { create: { image: $image, altText: $name } }
       }
     ) {
       id
       price
       description
-      status
       name
     }
   }
 `;
 
-const CreateProduct = () => {
+export default function CreateProduct() {
   const { inputs, handleChange, clearForm, resetForm } = useForm({
-    name: 'Name',
-    price: 100,
     image: '',
+    name: '',
+    price: 0,
     description: '',
   });
   const [createProduct, { loading, error, data }] = useMutation(
     CREATE_PRODUCT_MUTATION,
-    { variables: inputs, refetchQueries: [{ query: ALL_PRODUCTS_QUERY }] }
+    {
+      variables: inputs,
+      refetchQueries: [{ query: ALL_PRODUCTS_QUERY }],
+    }
   );
   return (
     <Form
       onSubmit={async (e) => {
         e.preventDefault();
+        // Submit the inputfields to the backend:
         const res = await createProduct();
-
         clearForm();
-        Router.push({ pathname: `/product/${res.data.createProduct.id}` });
+        // Go to that product's page!
+        Router.push({
+          pathname: `/product/${res.data.createProduct.id}`,
+        });
       }}
     >
       <DisplayError error={error} />
@@ -59,11 +63,11 @@ const CreateProduct = () => {
         <label htmlFor="image">
           Image
           <input
+            required
             type="file"
             id="image"
             name="image"
             onChange={handleChange}
-            required
           />
         </label>
         <label htmlFor="name">
@@ -83,7 +87,7 @@ const CreateProduct = () => {
             type="number"
             id="price"
             name="price"
-            placeholder="Price"
+            placeholder="price"
             value={inputs.price}
             onChange={handleChange}
           />
@@ -91,7 +95,6 @@ const CreateProduct = () => {
         <label htmlFor="description">
           Description
           <textarea
-            type="text"
             id="description"
             name="description"
             placeholder="Description"
@@ -99,9 +102,11 @@ const CreateProduct = () => {
             onChange={handleChange}
           />
         </label>
+
         <button type="submit">+ Add Product</button>
       </fieldset>
     </Form>
   );
-};
-export default CreateProduct;
+}
+
+export { CREATE_PRODUCT_MUTATION };

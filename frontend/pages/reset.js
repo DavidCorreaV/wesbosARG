@@ -1,23 +1,19 @@
 import RequestReset from '../components/RequestReset';
 import Reset from '../components/Reset';
 
-const resetPage = ({ query }) => {
-  console.log(query.token);
+export default function ResetPage({ query }) {
   if (!query?.token) {
     return (
       <div>
-        <p>
-          Sorry, we were expecting a token, but you can try again. If you don't
-          have one, you can get one here
-        </p>
+        <p>Sorry you must supply a token</p>
         <RequestReset />
       </div>
     );
   }
   return (
-    <>
+    <div>
+      <p>RESET YOUR PASSWORD</p>
       <Reset token={query.token} />
-    </>
+    </div>
   );
-};
-export default resetPage;
+}

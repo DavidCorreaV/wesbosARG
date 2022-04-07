@@ -1,8 +1,8 @@
-import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
-import useForm from '../lib/useForm';
+import { useMutation } from '@apollo/client';
 import Form from './styles/Form';
-import DisplayError from './ErrorMessage';
+import useForm from '../lib/useForm';
+import Error from './ErrorMessage';
 
 const RESET_MUTATION = gql`
   mutation RESET_MUTATION(
@@ -12,8 +12,8 @@ const RESET_MUTATION = gql`
   ) {
     redeemUserPasswordResetToken(
       email: $email
-      password: $password
       token: $token
+      password: $password
     ) {
       code
       message
@@ -21,50 +21,43 @@ const RESET_MUTATION = gql`
   }
 `;
 
-// eslint-disable-next-line react/prop-types
-const Reset = ({ token }) => {
+export default function Reset({ token }) {
   const { inputs, handleChange, resetForm } = useForm({
-    email: 'Email',
+    email: '',
     password: '',
-    token: '',
+    token,
   });
-
-  const [reset, { data, error, loading }] = useMutation(RESET_MUTATION, {
-    variables: {
-      email: inputs.email,
-      password: inputs.password,
-      token,
-    },
-    // refetchQueries: [{ query: CURRENT_USER_QUERY }],
+  const [reset, { data, loading, error }] = useMutation(RESET_MUTATION, {
+    variables: inputs,
   });
-
+  const successfulError = data?.redeemUserPasswordResetToken?.code
+    ? data?.redeemUserPasswordResetToken
+    : undefined;
+  console.log(error);
+  async function handleSubmit(e) {
+    e.preventDefault(); // stop the form from submitting
+    console.log(inputs);
+    const res = await reset().catch(console.error);
+    console.log(res);
+    console.log({ data, loading, error });
+    resetForm();
+    // Send the email and password to the graphqlAPI
+  }
   return (
-    <Form
-      method="post"
-      onSubmit={async (e) => {
-        e.preventDefault();
-        const res = await reset().catch((err) => {
-          // setErrorMessage(err);
-          console.log(err);
-        });
-        resetForm();
-      }}
-    >
-      <h2>Reset your password</h2>
-
-      <DisplayError error={data?.redeemUserPasswordResetToken || error} />
-
-      <fieldset disabled={loading} aria-busy={loading}>
+    <Form method="POST" onSubmit={handleSubmit}>
+      <h2>Reset Your Password</h2>
+      <Error error={error || successfulError} />
+      <fieldset>
         {data?.redeemUserPasswordResetToken === null && (
-          <p>Succesfully reset your password</p>
+          <p>Success! You can Now sign in</p>
         )}
+
         <label htmlFor="email">
           Email
           <input
             type="email"
-            id="signEmail"
             name="email"
-            placeholder="your email"
+            placeholder="Your Email Address"
             autoComplete="email"
             value={inputs.email}
             onChange={handleChange}
@@ -74,17 +67,15 @@ const Reset = ({ token }) => {
           Password
           <input
             type="password"
-            id="signPassword"
             name="password"
             placeholder="Password"
+            autoComplete="password"
             value={inputs.password}
             onChange={handleChange}
           />
         </label>
-
-        <button type="submit">Request Reset</button>
+        <button type="submit">Request Reset!</button>
       </fieldset>
     </Form>
   );
-};
-export default Reset;
+}

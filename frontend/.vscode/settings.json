@@ -1,9 +1,10 @@
 {
-  "emmet.includeLanguages": {
-    "javascript": "javascriptreact",
-    "vue-html": "html"
+  "workbench.colorCustomizations": {
+    "titleBar.activeForeground": "#000",
+    "titleBar.inactiveForeground": "#000000CC",
+    "titleBar.activeBackground": "#FFC600",
+    "titleBar.inactiveBackground": "#FFC600CC"
   },
-  "emmet.triggerExpansionOnTab": true,
   "editor.formatOnSave": true,
   "[javascript]": {
     "editor.formatOnSave": false
@@ -15,24 +16,5 @@
   "editor.codeActionsOnSave": {
     "source.fixAll": true
   },
-  "workbench.colorCustomizations": {
-    "activityBar.activeBackground": "#4f668d",
-    "activityBar.activeBorder": "#c699aa",
-    "activityBar.background": "#4f668d",
-    "activityBar.foreground": "#e7e7e7",
-    "activityBar.inactiveForeground": "#e7e7e799",
-    "activityBarBadge.background": "#c699aa",
-    "activityBarBadge.foreground": "#15202b",
-    "sash.hoverBorder": "#4f668d",
-    "statusBar.background": "#3d4e6c",
-    "statusBar.foreground": "#e7e7e7",
-    "statusBarItem.hoverBackground": "#4f668d",
-    "statusBarItem.remoteBackground": "#3d4e6c",
-    "statusBarItem.remoteForeground": "#e7e7e7",
-    "titleBar.activeBackground": "#3d4e6c",
-    "titleBar.activeForeground": "#e7e7e7",
-    "titleBar.inactiveBackground": "#3d4e6c99",
-    "titleBar.inactiveForeground": "#e7e7e799"
-  },
-  "peacock.color": "#3d4e6c"
+  "prettier.disableLanguages": ["javascript", "javascriptreact"]
 }

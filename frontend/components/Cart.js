@@ -1,14 +1,13 @@
-/* eslint react/prop-types: 0 */
-
 import styled from 'styled-components';
-import { useUser } from './User';
-import Supreme from './styles/Supreme';
 import CartStyles from './styles/CartStyles';
 import CloseButton from './styles/CloseButton';
+import Supreme from './styles/Supreme';
 import formatMoney from '../lib/formatMoney';
-import calcTotalCart from '../lib/calcTotalCart';
+import { useUser } from './User';
+import calcTotalPrice from '../lib/calcTotalPrice';
 import { useCart } from '../lib/cartState';
 import RemoveFromCart from './RemoveFromCart';
+import { Checkout } from './Checkout';
 
 const CartItemStyles = styled.li`
   padding: 1rem 0;
@@ -22,65 +21,51 @@ const CartItemStyles = styled.li`
   p {
     margin: 0;
   }
-  button {
-    font-size: 3rem;
-    background: transparent;
-    border: none;
-    align-self: center;
-    justify-self: center;
-  }
 `;
 
-// eslint-disable-next-line react/prop-types
-const CartItem = ({ item }) => {
-  const { product } = item;
-  // eslint-disable-next-line react/prop-types
+function CartItem({ cartItem }) {
+  const { product } = cartItem;
+  if (!product) return null;
   return (
     <CartItemStyles>
       <img
+        width="100"
         src={product.photo.image.publicUrlTransformed}
         alt={product.name}
-        width="100"
       />
       <div>
         <h3>{product.name}</h3>
         <p>
-          {formatMoney((product.price * item.quantity) / 100)} -{' '}
+          {formatMoney(product.price * cartItem.quantity)}-
           <em>
-            {item.quantity}&times; {formatMoney(product.price / 100)}
+            {cartItem.quantity} &times; {formatMoney(product.price)} each
           </em>
         </p>
       </div>
-      <RemoveFromCart id={item.id} />
+      <RemoveFromCart id={cartItem.id} />
     </CartItemStyles>
   );
-};
+}
 
-const Cart = () => {
-  const { closeCart } = useCart();
+export default function Cart() {
   const me = useUser();
-  const { cartOpen } = useCart();
-  if (!me) {
-    return null;
-  }
+  const { cartOpen, closeCart } = useCart();
+  if (!me) return null;
   return (
     <CartStyles open={cartOpen}>
       <header>
-        <Supreme> {me.name}'s Cart</Supreme>
-        <CloseButton type="button" onClick={closeCart}>
-          &times;
-        </CloseButton>
+        <Supreme>{me.name}'s Cart</Supreme>
+        <CloseButton onClick={closeCart}>&times;</CloseButton>
       </header>
-
       <ul>
-        {me.cart.map((item) => (
-          <CartItem key={item.id} item={item} />
+        {me.cart.map((cartItem) => (
+          <CartItem key={cartItem.id} cartItem={cartItem} />
         ))}
       </ul>
       <footer>
-        <p>{formatMoney(calcTotalCart(me.cart))}</p>
+        <p>{formatMoney(calcTotalPrice(me.cart))}</p>
+        <Checkout />
       </footer>
     </CartStyles>
   );
-};
-export default Cart;
+}
