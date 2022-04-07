@@ -35,15 +35,13 @@ const Search = () => {
     }
   );
   const items = data?.searchTerms || [];
-  console.log(loading);
-  console.log(error);
-  console.log(data);
   const findItemsButChill = debounce(findItems, 300);
   resetIdCounter();
   const { inputValue, getMenuProps, getInputProps, getComboboxProps } =
     useCombobox({
-      items: [''],
+      items: [],
       onInputValueChange() {
+        console.log(data);
         findItemsButChill({ variables: { searchTerm: inputValue } });
       },
       onSelectedItemChange() {
