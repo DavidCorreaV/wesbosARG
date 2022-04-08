@@ -1,3 +1,4 @@
+import {useState, useEffect} from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import Cart from './Cart';
@@ -34,6 +35,13 @@ const HeaderStyle = styled.header`
     border-bottom: 1px solid var(--black, black);
   }
 `;
+
+function ClientOnly({children,...delegated}) {
+const [hasMounted,setHasMounted] = useState(false)  
+useEffect(()=>{setHasMounted(true)},[])
+  if (!hasMounted) {return null;}
+return <div {...delegated}>{children}</div>;
+}
 const Header = () => (
   <HeaderStyle>
     <div className="bar">
@@ -43,7 +51,7 @@ const Header = () => (
       <Nav />
     </div>
     <div className="sub-bar">
-      <Search />
+      <ClientOnly><Search /></ClientOnly>
     </div>
     <Cart />
   </HeaderStyle>
