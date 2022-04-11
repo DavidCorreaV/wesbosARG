@@ -9,6 +9,8 @@ import { User } from './schemas/User';
 import { CartItem } from './schemas/CartItem';
 import { Product } from './schemas/Product';
 import { ProductImage } from './schemas/ProductImage';
+import { OrderItem } from './schemas/OrderItem';
+import { Order } from './schemas/Order';
 import { insertSeedData } from './seed-data';
 import { sendPasswordResetEmail } from './lib/mail';
 import { extendGraphqlSchema } from './mutations';
@@ -50,6 +52,8 @@ export default withAuth(
       Product,
       ProductImage,
       CartItem,
+      OrderItem,
+      Order,
     }),
     extendGraphqlSchema,
     db: {
