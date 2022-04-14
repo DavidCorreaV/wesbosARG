@@ -9,6 +9,7 @@ import formatMoney from '../lib/formatMoney';
 import calcTotalCart from '../lib/calcTotalCart';
 import { useCart } from '../lib/cartState';
 import RemoveFromCart from './RemoveFromCart';
+import Checkout from './Checkout';
 
 const CartItemStyles = styled.li`
   padding: 1rem 0;
@@ -79,6 +80,7 @@ const Cart = () => {
       </ul>
       <footer>
         <p>{formatMoney(calcTotalCart(me.cart))}</p>
+        <Checkout />
       </footer>
     </CartStyles>
   );
