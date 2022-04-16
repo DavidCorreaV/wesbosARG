@@ -5,7 +5,7 @@ export default function formatMoney(cents = 0) {
     minimumFractionDigits: 2,
   };
 
-  if (cents % 100 === 0) {
+  if ((cents * 100) % 100 === 0) {
     options.minimumFractionDigits = 0;
   }
   const formatter = Intl.NumberFormat('en-US', options);
