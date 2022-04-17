@@ -18,6 +18,7 @@ const fakeItem = () => ({
   },
   name: 'dogs are best',
   description: 'dogs',
+  status: 'published',
 });
 
 const fakeUser = (overrides) => ({

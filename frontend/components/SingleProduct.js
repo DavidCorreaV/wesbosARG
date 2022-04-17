@@ -48,7 +48,7 @@ const SingleProduct = ({ id }) => {
   }
   const { name, description, photo, id: ProductId } = data.Product;
   return (
-    <ProductStyles>
+    <ProductStyles data-testid="singleProduct">
       <Head>
         <title>Sick Fits | {name}</title>
       </Head>

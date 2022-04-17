@@ -37,6 +37,12 @@ exports[`<Product/> Renders and matches the snapshot 1`] = `
       <button
         type="button"
       >
+        Add
+         to Cart 🛒
+      </button>
+      <button
+        type="button"
+      >
         Delete 🗑
       </button>
     </div>

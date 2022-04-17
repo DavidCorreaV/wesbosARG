@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<SignUp/> render and matches snapshot 1`] = `
+<div>
+  <form
+    class="Form-sc-1xszr8q-0 JYcwP"
+    method="post"
+  >
+    <h2>
+      Sign up for an account
+    </h2>
+    <fieldset
+      aria-busy="false"
+    >
+      <label
+        for="email"
+      >
+        Email
+        <input
+          autocomplete="email"
+          id="signEmail"
+          name="email"
+          placeholder="your email"
+          type="email"
+          value="Email"
+        />
+      </label>
+      <label
+        for="name"
+      >
+        Name
+        <input
+          autocomplete="name"
+          id="signName"
+          name="name"
+          placeholder="Your Name"
+          type="text"
+          value="Name"
+        />
+      </label>
+      <label
+        for="password"
+      >
+        Password
+        <input
+          id="signPassword"
+          name="password"
+          placeholder="Password"
+          type="password"
+          value=""
+        />
+      </label>
+      <button
+        type="submit"
+      >
+        Sign Up!
+      </button>
+    </fieldset>
+  </form>
+</div>
+`;

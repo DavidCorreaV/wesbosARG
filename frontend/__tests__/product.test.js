@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import Product from '../components/Product';
 import { fakeItem } from '../lib/testUtils';
+import { CartStateProvider } from '../lib/cartState';
 
 const product = fakeItem();
 
@@ -9,7 +10,9 @@ describe('<Product/>', () => {
   it('renders out the price tag and title', () => {
     const { container, debug } = render(
       <MockedProvider>
-        <Product product={product} />
+        <CartStateProvider>
+          <Product product={product} />
+        </CartStateProvider>
       </MockedProvider>
     );
     const priceTag = screen.getByText('$50');
@@ -22,7 +25,9 @@ describe('<Product/>', () => {
   it('Renders and matches the snapshot', () => {
     const { container, debug } = render(
       <MockedProvider>
-        <Product product={product} />
+        <CartStateProvider>
+          <Product product={product} />
+        </CartStateProvider>
       </MockedProvider>
     );
     expect(container).toMatchSnapshot();
@@ -31,7 +36,9 @@ describe('<Product/>', () => {
   it('renders the image properly', () => {
     const { container, debug } = render(
       <MockedProvider>
-        <Product product={product} />
+        <CartStateProvider>
+          <Product product={product} />
+        </CartStateProvider>
       </MockedProvider>
     );
     // grab the image

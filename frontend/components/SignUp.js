@@ -4,7 +4,7 @@ import useForm from '../lib/useForm';
 import Form from './styles/Form';
 import DisplayError from './ErrorMessage';
 
-const SIGNUP_MUTATION = gql`
+export const SIGNUP_MUTATION = gql`
   mutation SIGNUP_MUTATION(
     $email: String!
     $name: String!
@@ -36,7 +36,7 @@ const SignUp = () => {
 
   // const [errorMessage, setErrorMessage] = useState({});
   if (data?.createUser) {
-    return <p>Signed up with {data?.createUser.email}. Please Sign In.</p>;
+    return <p>Signed up with {data?.createUser.email} - Please Sign In.</p>;
   }
 
   return (
